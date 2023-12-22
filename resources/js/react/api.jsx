@@ -4,6 +4,8 @@ const api = (baseurl, setLoading) => {
         Accept: "application/json",
     };
 
+    baseurl = window.location.origin;
+
     return {
         checkAuth: async () => {
             setLoading();
