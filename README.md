@@ -48,12 +48,12 @@ Jika Anda tidak menggunakan Docker, Anda dapat menggunakan PHP Artisan Serve:
 
 1. Clone repositori dari GitHub:
    ```bash
-   git clone https://github.com/Nyuuk/FastPrint-Test
+   git clone https://github.com/Nyuuk/data_andalan_utama_test.git
    ```
 
 2. Pindah ke direktori proyek:
    ```bash
-   cd FastPrint-Test
+   cd data_andalan_utama_test
    ```
 
 3. Copy `.env.example` menjadi `.env` & silahkan konfigurasi database user dan password terlebih dahulu:
