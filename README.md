@@ -10,7 +10,7 @@ Sebelum memulai, pastikan sistem Anda memenuhi persyaratan berikut:
 
 - [Composer](https://getcomposer.org/) terinstal
 - PHP 8.2 atau versi lebih tinggi terinstal
-- [Node.js](https://nodejs.org/) terinstal
+- [Node.js](https://nodejs.org/) terinstal (Optional)
 - [Docker](https://www.docker.com/) terinstal (opsional, hanya jika Anda ingin menggunakan Docker)
 
 
@@ -36,6 +36,8 @@ Jika Anda ingin menggunakan Docker, ikuti langkah-langkah berikut:
    ```bash
    docker-compose exec app php artisan migrate
    ```
+
+NB: Jika NPM atau NodeJS terinstall dalam sistem utama maka jalankan `npm install` sebelum langkah 3. Jika tidak terinstall maka jalankan `docker-compose exec app apt install nodejs npm -y` `docker-compose exec app npm install` setelah langkah 4. pastikan anda memiliki paket data yang cukup.
 
 
 6. Akses proyek di [http://localhost:8081](http://localhost:8081)
