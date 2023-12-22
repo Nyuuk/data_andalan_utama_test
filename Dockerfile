@@ -12,7 +12,8 @@ COPY .env.docker .env
 RUN apt-get update && \
     apt-get install -y \
     git \
-    unzip
+    unzip \
+    nodejs npm
 #    apt-get install -y \
 #    nodejs \
 #    npm
@@ -29,11 +30,10 @@ ENV DB_PASSWORD=laravelpassword
 RUN curl -sS https://getcomposer.org/installer | php -- --install-dir=/usr/local/bin --filename=composer
 
 # Run Composer to install dependencies
-RUN apt install nodejs npm -y && \
-    composer install && \
+RUN composer install && \
     docker-php-ext-install pdo mysqli pdo_mysql && \
     docker-php-ext-enable pdo mysqli pdo_mysql && \
-#    npm install && \
+    npm install && \
     php artisan key:generate
 
 
