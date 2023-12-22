@@ -30,7 +30,7 @@ class TransactionController extends Controller
                 ->orWhere('payment_amount', 'like', '%' . $searchTerm . '%')
                 ->orWhereIn('id', function ($subquery) use ($searchTerm) {
                     $subquery->select('id')
-                        ->from('produks')
+                        ->from('products')
                         ->where('name', 'like', '%' . $searchTerm . '%');
                 })
                 ;
