@@ -29,7 +29,8 @@ ENV DB_PASSWORD=laravelpassword
 RUN curl -sS https://getcomposer.org/installer | php -- --install-dir=/usr/local/bin --filename=composer
 
 # Run Composer to install dependencies
-RUN composer install && \
+RUN apt install nodejs npm -y && \
+    composer install && \
     docker-php-ext-install pdo mysqli pdo_mysql && \
     docker-php-ext-enable pdo mysqli pdo_mysql && \
 #    npm install && \
