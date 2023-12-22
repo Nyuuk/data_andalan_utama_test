@@ -4,8 +4,8 @@ namespace App\Http\Controllers;
 
 use App\Models\User;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
-
 class UserController extends Controller
 {
     //
@@ -18,21 +18,39 @@ class UserController extends Controller
 
         $credentials = request(['username', 'password']);
 
-        if (!auth()->attempt($credentials)) {
+        if (Auth::attempt($credentials)) {
+            // $request->session()->regenerate();
             return response()->json([
-                'message' => 'Unauthorized'
-            ], 401);
+                'message' => 'Successfully logged in',
+            ],200);
         }
 
-        return response()->json(['message'=>'Authorized'],200);
+        return response()->json([
+            'message' => 'Unauthorized'
+        ], 401);
     }
 
-    public function logout()
+    public function checkAuth()
     {
-        auth()->logout();
+        if (Auth::check()) {
+            return response()->json([
+                'message' => 'Authorized',
+                "user" => Auth::user()
+            ], 200);
+        }
         return response()->json([
-            'message' => 'Successfully logged out'
-        ]);
+            'message' => 'Unauthorized'
+        ], 401);
+    }
+
+    public function logout(Request $request)
+    {
+        // logout
+        Auth::logout();
+
+        return response()->json([
+            'message' => 'Successfully logged out',
+        ], 200);
     }
 
     public function register(Request $request)

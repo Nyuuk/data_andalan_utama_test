@@ -1,0 +1,14 @@
+.loginHeader {
+    /* position: absolute; */
+    /* top: 0;
+    left: 50%; */
+    /* transform: translateX(-50%); */
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width: 140px;
+    height: 70px;
+    border-radius: 0 0 20px 20px;
+    background-color: #334155; 
+}
+

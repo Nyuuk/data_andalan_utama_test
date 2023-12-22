@@ -17,27 +17,24 @@ class TransactionController extends Controller
         return response()->json($transactions, 200);
     }
     // Read
-    public function showPag(Request $request,$perPage = 10, $page = 1)
+    public function showPag(Request $request, $perPage = 10, $page = 1)
     {
         $searchTerm = $request->query('search');
         // Query pencarian di beberapa tabel
-        if ($searchTerm)
-        {
-            $query = DB::table('transactions')
-                ->orWhere('reference_no', 'like', '%' . $searchTerm . '%')
-                ->orWhere('price', 'like', '%' . $searchTerm . '%')
-                ->orWhere('quantity', 'like', '%' . $searchTerm . '%')
-                ->orWhere('payment_amount', 'like', '%' . $searchTerm . '%')
-                ->orWhereIn('id', function ($subquery) use ($searchTerm) {
-                    $subquery->select('id')
-                        ->from('products')
-                        ->where('name', 'like', '%' . $searchTerm . '%');
+        if ($searchTerm) {
+            $transactions = Transaction::with('product')
+                ->where(function ($query) use ($searchTerm) {
+                    $query->where('reference_no', 'like', '%' . $searchTerm . '%')
+                        ->orWhere('price', 'like', '%' . $searchTerm . '%')
+                        ->orWhere('quantity', 'like', '%' . $searchTerm . '%')
+                        ->orWhere('payment_amount', 'like', '%' . $searchTerm . '%');
                 })
-                ;
+                ->orWhereHas('product', function ($query) use ($searchTerm) {
+                    $query->where('name', 'like', '%' . $searchTerm . '%');
+                })
+                ->paginate($perPage, ['*'], 'page', $page);
 
-            $products = $query->paginate($perPage, ['*'], 'page', $page);
-
-            return response()->json($products, 200);
+            return response()->json($transactions, 200);
         }
 
         $posts = Transaction::with('product')->paginate($perPage, ['*'], 'page', $page);
@@ -55,16 +52,14 @@ class TransactionController extends Controller
 
         $product = Product::find($request->product_id);
 
-        if (!$product)
-        {
-            return response()->json(['message'=>'Product Not Found'], 404);
+        if (!$product) {
+            return response()->json(['message' => 'Product Not Found'], 404);
         }
 
         $refrence_no = $this->getReference_no($request->quantity, $product->price, $request->quantity * $product->price);
 
-        if ($refrence_no['status'] === false)
-        {
-            return response()->json(['message'=>'failed to get reference_no', 'response' => $refrence_no], 400);
+        if ($refrence_no['status'] === false) {
+            return response()->json(['message' => 'failed to get reference_no', 'response' => $refrence_no], 400);
         }
 
         $data = [
@@ -75,9 +70,8 @@ class TransactionController extends Controller
             'quantity' => $request->quantity
         ];
 
-        if ($product->stock < $request->quantity)
-        {
-            return response()->json(['message'=>'Stock Not Available'], 400);
+        if ($product->stock < $request->quantity) {
+            return response()->json(['message' => 'Stock Not Available'], 400);
         }
 
         $product->stock = $product->stock - $request->quantity;
@@ -85,11 +79,10 @@ class TransactionController extends Controller
 
         $transaction = Transaction::create($data);
 
-        if ($transaction)
-        {
-            return response()->json(['message'=>'Success Add', 'Transaction'=>$transaction], 200);
+        if ($transaction) {
+            return response()->json(['message' => 'Success Add', 'Transaction' => $transaction], 200);
         }
-        return response()->json(['message'=>'Failed Add'], 400);
+        return response()->json(['message' => 'Failed Add'], 400);
     }
 
     protected function getReference_no($quantity, $price, $payment_amoount)
@@ -109,17 +102,13 @@ class TransactionController extends Controller
 
         $responseData = $response->json();
 
-        if ($response->successful())
-        {
-            if (!$responseData['code'] == '20000')
-            {
-                return ['status'=> false, 'response'=>$responseData];
+        if ($response->successful()) {
+            if (!$responseData['code'] == '20000') {
+                return ['status' => false, 'response' => $responseData];
             }
             $refrence_no = $responseData['data']['reference_no'];
-            return ['status' => true, 'no'=>$refrence_no];
+            return ['status' => true, 'no' => $refrence_no];
         }
-        return ['status'=> false, 'response'=>$responseData];
+        return ['status' => false, 'response' => $responseData];
     }
-
-
 }
