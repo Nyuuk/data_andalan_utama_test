@@ -12,7 +12,7 @@ COPY .env.docker .env
 RUN apt-get update && \
     apt-get install -y \
     git \
-    unzip \
+    unzip
     # nodejs npm
 
 
