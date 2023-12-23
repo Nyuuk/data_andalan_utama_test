@@ -37,7 +37,12 @@ Jika Anda ingin menggunakan Docker, ikuti langkah-langkah berikut:
    docker-compose exec app php artisan migrate
    ```
 
-NB: Jika NPM atau NodeJS terinstall dalam sistem utama maka jalankan `npm install` sebelum langkah 3. Jika tidak terinstall maka jalankan `docker-compose exec app apt install nodejs npm -y` `docker-compose exec app npm install` setelah langkah 4. pastikan anda memiliki paket data yang cukup.
+6. Menjalankan perintah build React
+   ```bash
+   docker-compose exec app npm run build
+   ```
+
+NB: Jika NPM atau NodeJS terinstall dalam sistem utama maka jalankan `npm install` sebelum langkah 3. Jika tidak terinstall maka jalankan `docker-compose exec app apt install nodejs npm -y` `docker-compose exec app npm install` setelah langkah 4. pastikan anda memiliki paket data yang cukup. Nomor 6 bisa di jalankan di sistem utama atau di docker, jika di sistem utama maka `npm run build`
 
 
 6. Akses proyek di [http://localhost:8081](http://localhost:8081)
